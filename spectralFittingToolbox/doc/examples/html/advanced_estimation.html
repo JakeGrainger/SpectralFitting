@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,chrome=1"><meta name="generator" content="MATLAB 2020b"><title>Advanced Estimation</title><style type="text/css">.rtcContent { padding: 30px; } .S0 { margin: 3px 10px 5px 4px; padding: 0px; line-height: 28.8px; min-height: 0px; white-space: pre-wrap; color: rgb(213, 80, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 24px; font-weight: 400; text-align: left;  }
+.S1 { margin: 2px 10px 9px 4px; padding: 0px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(0, 0, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: left;  }
+.CodeBlock { background-color: #F7F7F7; margin: 10px 0 10px 0;}
+.S2 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 0px none rgb(0, 0, 0); border-radius: 4px 4px 0px 0px; padding: 6px 45px 0px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S3 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 0px none rgb(0, 0, 0); border-bottom: 0px none rgb(0, 0, 0); border-radius: 0px; padding: 0px 45px 0px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S4 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 0px none rgb(0, 0, 0); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 0px 0px 4px 4px; padding: 0px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S5 { margin: 3px 10px 5px 4px; padding: 0px; line-height: 20px; min-height: 0px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 20px; font-weight: 700; text-align: left;  }
+.S6 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 4px; padding: 6px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S7 { margin: 10px 10px 9px 4px; padding: 0px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(0, 0, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: left;  }
+.S8 { margin: 20px 10px 5px 4px; padding: 0px; line-height: 20px; min-height: 0px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 20px; font-weight: 700; text-align: left;  }
+.S9 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 4px 4px 0px 0px; padding: 6px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S10 { color: rgb(64, 64, 64); padding: 10px 0px 6px 17px; background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px; overflow-x: hidden; line-height: 17.234px;  }
+.embeddedOutputsErrorElement {min-height: 18px; max-height: 250px; overflow: auto;}
+.embeddedOutputsErrorElement.inlineElement {}
+.embeddedOutputsErrorElement.rightPaneElement {}
+.embeddedOutputsWarningElement{min-height: 18px; max-height: 250px; overflow: auto;}
+.embeddedOutputsWarningElement.inlineElement {}
+.embeddedOutputsWarningElement.rightPaneElement {}
+.diagnosticMessage-wrapper {font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12px;}
+.diagnosticMessage-wrapper.diagnosticMessage-warningType {color: rgb(255,100,0);}
+.diagnosticMessage-wrapper.diagnosticMessage-warningType a {color: rgb(255,100,0); text-decoration: underline;}
+.diagnosticMessage-wrapper.diagnosticMessage-errorType {color: rgb(230,0,0);}
+.diagnosticMessage-wrapper.diagnosticMessage-errorType a {color: rgb(230,0,0); text-decoration: underline;}
+.diagnosticMessage-wrapper .diagnosticMessage-messagePart,.diagnosticMessage-wrapper .diagnosticMessage-causePart {white-space: pre-wrap;}
+.diagnosticMessage-wrapper .diagnosticMessage-stackPart {white-space: pre;}
+.embeddedOutputsTextElement,.embeddedOutputsVariableStringElement {white-space: pre; word-wrap: initial; min-height: 18px; max-height: 250px; overflow: auto;}
+.textElement,.rtcDataTipElement .textElement {padding-top: 3px;}
+.embeddedOutputsTextElement.inlineElement,.embeddedOutputsVariableStringElement.inlineElement {}
+.inlineElement .textElement {}
+.embeddedOutputsTextElement.rightPaneElement,.embeddedOutputsVariableStringElement.rightPaneElement {min-height: 16px;}
+.rightPaneElement .textElement {padding-top: 2px; padding-left: 9px;}
+.S11 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 0px none rgb(0, 0, 0); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 0px; padding: 0px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }</style></head><body><div class = rtcContent><h1  class = 'S0'><span>Advanced Estimation</span></h1><div  class = 'S1'><span>There are additional options that can be changed when fitting models that can yield large compuational improvements. We set up a simple model to work with.</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S2'><span style="white-space: pre;"><span>sdf = @spectralFitting.genJONSWAPsdf;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>theta = [0.7;0.7;3.3;4];</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>lb = [0;0;1;1];</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>ub = Inf(4,1);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>waveSpecModel = spectralFitting.SpectralModel(sdf,theta,lb,ub);</span></span></div></div></div><h2  class = 'S5'><span>Global optimisation</span></h2><div  class = 'S1'><span>Sometimes, for more difficult optimisation problems (or when good initial guesses cannot be provided it may be useful to perform global optimisation.</span></div><div  class = 'S1'><span>To do this set</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S6'><span style="white-space: pre;"><span>waveSpecModel.fitRoutine = </span><span style="color: rgb(255, 215, 0);">'global'</span><span>;</span></span></div></div></div><div  class = 'S7'><span>The estimateParameter method will then perform global optimisation on every provided series. Note, this will be slow!</span></div><h2  class = 'S8'><span>Sequential optimisation</span></h2><div  class = 'S1'><span>Often, time series are recorded in sequence. If this is the case, using the previous fitted values as initial guesses often makes sense. Setting</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S6'><span style="white-space: pre;"><span>waveSpecModel.fitRoutine = </span><span style="color: rgb(255, 215, 0);">'sequential'</span><span>;</span></span></div></div></div><div  class = 'S7'><span>Will perform a global optimisaion for the first series provided and then do local fmincon style optimisation for each of the remaining series. Starting with an initial guess provided from the previous fitting.</span></div><h2  class = 'S5'><span>Efficient hessian calculation</span></h2><div  class = 'S1'><span>For ocean waves, there are often multiple component weather systems, such as a wind sea and swell. This least to a bimodal spectral density function. One model for this is to add two indepdent series with generalised JONSWAP spectral densities.</span></div><div  class = 'S1'><span>In this case, we know that certain parts of the Hessian will be zero, without performing any calculations. Therefore, we provided functionality to specifiy this using the hessIndex property. By default, this is set to</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S9'><span style="white-space: pre;"><span>display(waveSpecModel.hessIndex)</span></span></div><div  class = 'S10'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="F6EBAAF6" data-testid="output_0" data-width="1128" data-height="89" data-hashorizontaloverflow="false" style="width: 1158px; max-height: 261px;"><div class="textElement">  4×4 logical array
+
+   1   0   0   0
+   1   1   0   0
+   1   1   1   0
+   1   1   1   1</div></div></div></div></div><div  class = 'S7'><span>the lower triangle. However, for our bimodal model:</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S2'><span style="white-space: pre;"><span>sdf = @spectralFitting.bimodalSeaSdf;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>theta = [0.05;0.4;4;7;0.7;0.7;3.3;4];</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>lb = [0;0;1;1;0;0;1;1];</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>ub = Inf(8,1);</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>bimodalWaveSpecModel = spectralFitting.SpectralModel(sdf,theta,lb,ub);</span></span></div></div></div><div  class = 'S7'><span>we need to specify:</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S2'><span style="white-space: pre;"><span>bimodalWaveSpecModel.hessIndex = tril([true(4),false(4);false(4),true(4)]);</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S11'><span style="white-space: pre;"><span>display(bimodalWaveSpecModel.hessIndex)</span></span></div><div  class = 'S10'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="4ACFA831" data-testid="output_1" data-width="1128" data-height="146" data-hashorizontaloverflow="false" style="width: 1158px; max-height: 261px;"><div class="textElement">  8×8 logical array
+
+   1   0   0   0   0   0   0   0
+   1   1   0   0   0   0   0   0
+   1   1   1   0   0   0   0   0
+   1   1   1   1   0   0   0   0
+   0   0   0   0   1   0   0   0
+   0   0   0   0   1   1   0   0
+   0   0   0   0   1   1   1   0
+   0   0   0   0   1   1   1   1</div></div></div></div></div><div  class = 'S7'><span>Note that the spectralFitting.bimodalSeaSdf is set up to work with this hessIndex. It will not work correctly with the default, as it will not calculate enough second derivatives. Note we can only do this because the two components are independent.</span></div></div>
+<br>
+<!-- 
+##### SOURCE BEGIN #####
+%% Advanced Estimation
+% There are additional options that can be changed when fitting models that 
+% can yield large compuational improvements. We set up a simple model to work 
+% with.
+
+sdf = @spectralFitting.genJONSWAPsdf;
+theta = [0.7;0.7;3.3;4];
+lb = [0;0;1;1];
+ub = Inf(4,1);
+waveSpecModel = spectralFitting.SpectralModel(sdf,theta,lb,ub);
+%% Global optimisation
+% Sometimes, for more difficult optimisation problems (or when good initial 
+% guesses cannot be provided it may be useful to perform global optimisation.
+% 
+% To do this set
+
+waveSpecModel.fitRoutine = 'global';
+%% 
+% The estimateParameter method will then perform global optimisation on every 
+% provided series. Note, this will be slow!
+%% Sequential optimisation
+% Often, time series are recorded in sequence. If this is the case, using the 
+% previous fitted values as initial guesses often makes sense. Setting
+
+waveSpecModel.fitRoutine = 'sequential';
+%% 
+% Will perform a global optimisaion for the first series provided and then do 
+% local fmincon style optimisation for each of the remaining series. Starting 
+% with an initial guess provided from the previous fitting.
+%% Efficient hessian calculation
+% For ocean waves, there are often multiple component weather systems, such 
+% as a wind sea and swell. This least to a bimodal spectral density function. 
+% One model for this is to add two indepdent series with generalised JONSWAP spectral 
+% densities.
+% 
+% In this case, we know that certain parts of the Hessian will be zero, without 
+% performing any calculations. Therefore, we provided functionality to specifiy 
+% this using the hessIndex property. By default, this is set to
+
+display(waveSpecModel.hessIndex)
+%% 
+% the lower triangle. However, for our bimodal model:
+
+sdf = @spectralFitting.bimodalSeaSdf;
+theta = [0.05;0.4;4;7;0.7;0.7;3.3;4];
+lb = [0;0;1;1;0;0;1;1];
+ub = Inf(8,1);
+bimodalWaveSpecModel = spectralFitting.SpectralModel(sdf,theta,lb,ub);
+%% 
+% we need to specify:
+
+bimodalWaveSpecModel.hessIndex = tril([true(4),false(4);false(4),true(4)]);
+display(bimodalWaveSpecModel.hessIndex)
+%% 
+% Note that the spectralFitting.bimodalSeaSdf is set up to work with this hessIndex. 
+% It will not work correctly with the default, as it will not calculate enough 
+% second derivatives. Note we can only do this because the two components are 
+% independent.
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<toc version="2.0">
+<!-- First tocitem specifies top level in Help browser Contents pane -->
+<!-- This can be a roadmap page, as shown below, or a content page -->
+    <tocitem target="index.html">Spectral Fitting Toolbox
+        <!-- Nest tocitems to create hierarchical entries in  Contents-->
+        <!-- To include icons, use the following syntax for tocitems: -->
+        <!-- <tocitem target="foo.html" image="HelpIcon.NAME"> -->
+        <!-- Title-of-Section </tocitem> -->
+        <!-- where NAME is one of the following (use capital letters): -->
+        <!-- FUNCTION, USER_GUIDE, EXAMPLES, BLOCK, GETTING_STARTED, -->
+        <!-- Icon images used for these entries are also stored in -->
+        <!-- DEMOS, RELEASE_NOTES -->
+        <!-- matlabroot/toolbox/matlab/icons -->
+        <!-- A Getting Started Guide usually comes first -->
+
+        <tocitem target="features.html">Features
+            <!-- 2nd and lower TOC levels usually have anchor IDs -->
+            <tocitem target="features.html#modelFitting">Model Fitting
+            </tocitem>
+            <tocitem target="features.html#simulation">Simulation
+            </tocitem>
+            <tocitem target="features.html#nonPara">Non-parametric spectral density estimation
+                <tocitem target="features.html#Periodgram">Periodogram
+                </tocitem>
+                <tocitem target="features.html#Bartlett">Bartlett Periodogram
+                </tocitem>
+            </tocitem>
+        </tocitem>
+        <tocitem target="tutorials.html">Tutorials
+            <tocitem target="examples/html/spectral_model.html">Defining spectral models
+            </tocitem>
+            <tocitem target="examples/html/simulation.html">Simulting Gaussian processes
+            </tocitem>
+            <tocitem target="examples/html/non_parametric.html">Non-parametric estimation
+            </tocitem>
+            <tocitem target="examples/html/basic_estimation.html">Basic estimation
+            </tocitem>
+            <tocitem target="examples/html/variance.html">Estimator variance and confidence intervals
+            </tocitem>
+            <tocitem target="examples/html/advanced_estimation.html">Advanced estimation
+            </tocitem>
+            <tocitem target="examples/html/custom_models.html">Specifying custom models
+            </tocitem>
+        </tocitem>
+        <!-- User Guide comes next -->
+        <!-- Function reference next -->
+        <!-- First item is page describing function categories, if any -->
+        <tocitem target="classList.html"
+                 image="HelpIcon.FUNCTION">Classes and Methods
+            <!-- First category, with link to anchor in above page -->
+            <tocitem target="classList.html#SpectralModel">SpectralModel
+                <!-- Inside category, list its functions alphabetically -->
+                <tocitem target="functionDoc/SpectralModel/computeAliasedSpectralDensity.html">computeAliasedSpectralDensity</tocitem>
+                <tocitem target="functionDoc/SpectralModel/computeAutoCovariance.html">computeAutoCovariance</tocitem>
+                <tocitem target="functionDoc/SpectralModel/computeCorrPeriodogram.html">computeCorrPeriodogram</tocitem>
+                <tocitem target="functionDoc/SpectralModel/computeCovPeriodogram.html">computeCovPeriodogram</tocitem>
+                <tocitem target="functionDoc/SpectralModel/computeExpectedPeriodogram.html">computeExpectedPeriodogram</tocitem>
+                <tocitem target="functionDoc/SpectralModel/estimateParameter.html">estimateParameter</tocitem>
+                <tocitem target="functionDoc/SpectralModel/plotAcv.html">plotAcv</tocitem>
+                <tocitem target="functionDoc/SpectralModel/plotAliasedSdf.html">plotAliasedSdf</tocitem>
+                <tocitem target="functionDoc/SpectralModel/plotCorrI.html">plotCorrI</tocitem>
+                <tocitem target="functionDoc/SpectralModel/plotCovI.html">plotCovI</tocitem>
+                <tocitem target="functionDoc/SpectralModel/plotdBAliasedSdf.html">plotdBAliasedSdf</tocitem>
+                <tocitem target="functionDoc/SpectralModel/plotdBEI.html">plotdBEI</tocitem>
+                <tocitem target="functionDoc/SpectralModel/plotdBSdf.html">plotdBSdf</tocitem>
+                <tocitem target="functionDoc/SpectralModel/plotEI.html">plotEI</tocitem>
+                <tocitem target="functionDoc/SpectralModel/plotSdf.html">plotSdf</tocitem>
+                <tocitem target="functionDoc/SpectralModel/simulateGaussianProcess.html">simulateGaussianProcess</tocitem>
+                <!-- ... -->
+            </tocitem>
+            <!-- Second category, with link to anchor in above page -->
+            <tocitem target="classList.html#NonParaSpcEst">NonParaSpcEst (Periodgram and BartlettPeriodogram)
+                <!-- Inside category, list its functions alphabetically -->
+                <tocitem target="functionDoc/NonParaSpcEst/plot.html">plot</tocitem>
+                <tocitem target="functionDoc/NonParaSpcEst/plotdB.html">plotdB</tocitem>
+                <!-- ... -->
+             </tocitem>
+            <tocitem target="classList.html#sdf">SpectralDensityFunctions
+                <!-- Inside category, list its functions alphabetically -->
+                <tocitem target="functionDoc/additiveSdf.html">additiveSdf</tocitem>
+                <tocitem target="functionDoc/bimodalSeaSdf.html">bimodalSeaSdf</tocitem>
+                <tocitem target="functionDoc/genJONSWAPsdf.html">genJONSWAPsdf</tocitem>
+                <!-- ... -->
+            </tocitem>
+        </tocitem>
+        <!-- Optional link or links to your or other Web sites -->
+        <tocitem target="https://github.com/JakeGrainger/SpectralFitting">
+        GitHub page
+        </tocitem>
+    </tocitem>
+</toc>

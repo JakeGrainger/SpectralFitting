@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="matlabStyle.css">
+    <title>Features</title>
+</head>
+
+<body>
+    <div class="spfit_container">
+        <h1>Classes and Methods</h1>
+        <hr />
+        <p class="tagline">
+            List of classes and their respective methods
+        </p><br />
+        <p>
+            Spectral Fitting Toolbox includes a few different classes used to perform the different features.
+        </p><br />
+        <div class="spfit_container" id="SpectralModel">
+            <h2>SpectralModel</h2><hr />
+            <p>
+                This is the main class used by Spectral Fitting Toolbox. Objects of this class define spectral models. These models can be simulated from or fitted to data using the appropriate methods.
+            </p>
+            <h3>Methods</h3>
+            <div class="methodList">
+                <ul>
+                    <li>
+                        <a href="functionDoc/SpectralModel/computeAliasedSpectralDensity.html">computeAliasedSpectralDensity</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/computeAutoCovariance.html">computeAutoCovariance</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/computeCorrPeriodogram.html">computeCorrPeriodogram</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/computeCovPeriodogram.html">computeCovPeriodogram</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/computeExpectedPeriodogram.html">computeExpectedPeriodogram</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/estimateParameter.html">estimateParameter</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/plotAcv.html">plotAcv</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/plotAliasedSdf.html">plotAliasedSdf</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/plotCorrI.html">plotCorrI</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/plotCovI.html">plotCovI</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/plotdBAliasedSdf.html">plotdBAliasedSdf</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/plotdBEI.html">plotdBEI</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/plotdBSdf.html">plotdBSdf</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/plotSdf.html">plotSdf</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/SpectralModel/simulateGaussianProcess.html">simulateGaussianProcess</a>
+                    </li>
+                </ul>
+            </div>
+        </div><br />
+        <div class="spfit_container" id="NonParaSpcEst">
+            <h2>NonParaSpcEst</h2><hr />
+            <p>
+                This class allows the user to easily calculate and plot the non-parametric estimates of a timeseries. The two subclasses Periodogram and BartlettPeriodogram should be used to construct the relevant estimate. But the plotting functions are shared between the two.
+            </p>
+            <h3>Methods</h3>
+            <div class="methodList">
+                <ul>
+                    <li>
+                        <a href="functionDoc/NonParaSpcEst/plot.html">plot</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/NonParaSpcEst/plotdB.html">plotdB</a>
+                    </li>
+                </ul>
+            </div>
+        </div><br />
+        <div class="spfit_container" id="sdf">
+            <h2>SpectralDensityFunctions</h2><hr />
+            <p>
+                Additional functions which provide parameteric spectral density functions for some processes.
+            </p>
+            <h3>Functions</h3>
+            <div class="methodList">
+                <ul>
+                    <li>
+                        <a href="functionDoc/additiveSdf.html">additiveSdf</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/bimodalSeaSdf.html">bimodalSeaSdf</a>
+                    </li>
+                    <li>
+                        <a href="functionDoc/genJONSWAPsdf.html">genJONSWAPsdf</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

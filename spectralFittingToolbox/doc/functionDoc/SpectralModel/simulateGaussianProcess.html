@@ -1,0 +1,156 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>simulateGaussianProcess</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-08-21"><meta name="DC.source" content="simulateGaussianProcess.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> varargout = simulateGaussianProcess(obj,N,Delta)
+<span class="comment">% simulateGaussianProcess  Simulate a Gaussian Process.</span>
+<span class="comment">%   simulateGaussianProcess(obj,N,Delta) simulates a Gaussian process with</span>
+<span class="comment">%   spectral density function defined in obj, sampled every Delta seconds,</span>
+<span class="comment">%   recording N observations. This method uses circulant embedding.</span>
+<span class="comment">%</span>
+<span class="comment">%   See also randn.</span>
+<span class="keyword">arguments</span>
+    obj <span class="typesection">spectralFitting.SpectralModel</span>
+    N<span class="typesection">(1,1) {mustBeNumeric,mustBePositive,mustBeInteger,mustBeNonempty}</span>
+    Delta<span class="typesection">(1,1) {mustBeNumeric,mustBeNonempty}</span>
+<span class="keyword">end</span>
+autocovariance = parAutoCovariance(obj,N,Delta,obj.parameter);
+isPositiveSemiDefinite = false;
+padding = 0; <span class="comment">% check this</span>
+<span class="keyword">while</span> ~isPositiveSemiDefinite
+    <span class="comment">% make s</span>
+    s = [autocovariance;zeros(padding,1);autocovariance(end-1:-1:2)]; <span class="comment">% end-1 corresponds to lag N-2, 2 corresponds to lag 1</span>
+    <span class="comment">% fft s</span>
+    s_tilde = fft(s);
+    isPositiveSemiDefinite = min(s_tilde)&gt;=0;
+    <span class="keyword">if</span> ~isPositiveSemiDefinite
+        padding = padding + 2;
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> padding &gt; 1024
+        error(<span class="string">'failed to find an embedding'</span>);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="keyword">if</span> padding &gt; 0
+    warning(<span class="string">'minimal embedding not valid, %d extra values used in s'</span>,padding)
+<span class="keyword">end</span>
+<span class="comment">% gen epsilon</span>
+epsilon = randn(length(s),1)+1i*randn(length(s),1);
+<span class="comment">% make e_tilde = epsilon*sqrt(fft s/2M)</span>
+e_tilde = epsilon.*sqrt(s_tilde/length(s));
+<span class="comment">% make e = fft(e_tilde)</span>
+e = fft(e_tilde);
+<span class="comment">% subsample record</span>
+varargout{1} = real(e(1:N));
+varargout{2} = imag(e(1:N));
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function varargout = simulateGaussianProcess(obj,N,Delta)
+% simulateGaussianProcess  Simulate a Gaussian Process.
+%   simulateGaussianProcess(obj,N,Delta) simulates a Gaussian process with
+%   spectral density function defined in obj, sampled every Delta seconds,
+%   recording N observations. This method uses circulant embedding.
+%
+%   See also randn.
+arguments
+    obj spectralFitting.SpectralModel
+    N(1,1) {mustBeNumeric,mustBePositive,mustBeInteger,mustBeNonempty}
+    Delta(1,1) {mustBeNumeric,mustBeNonempty}
+end
+autocovariance = parAutoCovariance(obj,N,Delta,obj.parameter);
+isPositiveSemiDefinite = false;
+padding = 0; % check this
+while ~isPositiveSemiDefinite
+    % make s
+    s = [autocovariance;zeros(padding,1);autocovariance(end-1:-1:2)]; % end-1 corresponds to lag N-2, 2 corresponds to lag 1
+    % fft s
+    s_tilde = fft(s);
+    isPositiveSemiDefinite = min(s_tilde)>=0;
+    if ~isPositiveSemiDefinite
+        padding = padding + 2;
+    end
+    if padding > 1024
+        error('failed to find an embedding');
+    end
+end
+if padding > 0
+    warning('minimal embedding not valid, %d extra values used in s',padding)
+end
+% gen epsilon
+epsilon = randn(length(s),1)+1i*randn(length(s),1);
+% make e_tilde = epsilon*sqrt(fft s/2M)
+e_tilde = epsilon.*sqrt(s_tilde/length(s));
+% make e = fft(e_tilde)
+e = fft(e_tilde);
+% subsample record
+varargout{1} = real(e(1:N));
+varargout{2} = imag(e(1:N));
+end
+
+##### SOURCE END #####
+--></body></html>

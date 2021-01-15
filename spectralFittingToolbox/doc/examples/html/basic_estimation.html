@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,IE=9,chrome=1"><meta name="generator" content="MATLAB 2020b"><title>Basic Estimation</title><style type="text/css">.rtcContent { padding: 30px; } .S0 { margin: 3px 10px 5px 4px; padding: 0px; line-height: 28.8px; min-height: 0px; white-space: pre-wrap; color: rgb(213, 80, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 24px; font-weight: 400; text-align: left;  }
+.S1 { margin: 2px 10px 9px 4px; padding: 0px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(0, 0, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: left;  }
+.CodeBlock { background-color: #F7F7F7; margin: 10px 0 10px 0;}
+.S2 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 0px none rgb(0, 0, 0); border-radius: 4px 4px 0px 0px; padding: 6px 45px 0px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S3 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 0px none rgb(0, 0, 0); border-bottom: 0px none rgb(0, 0, 0); border-radius: 0px; padding: 0px 45px 0px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S4 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 0px none rgb(0, 0, 0); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 0px 0px 4px 4px; padding: 0px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S5 { margin: 10px 10px 9px 4px; padding: 0px; line-height: 21px; min-height: 0px; white-space: pre-wrap; color: rgb(0, 0, 0); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 14px; font-weight: 400; text-align: left;  }
+.S6 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 0px none rgb(0, 0, 0); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 0px; padding: 0px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S7 { color: rgb(64, 64, 64); padding: 10px 0px 6px 17px; background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box; font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px; overflow-x: hidden; line-height: 17.234px;  }
+.variableValue { width: 100% !important; }
+.embeddedOutputsMatrixElement,.eoOutputWrapper .matrixElement {min-height: 18px; box-sizing: border-box;}
+.embeddedOutputsMatrixElement .matrixElement,.eoOutputWrapper .matrixElement,.rtcDataTipElement .matrixElement {position: relative;}
+.matrixElement .variableValue,.rtcDataTipElement .matrixElement .variableValue {white-space: pre; display: inline-block; vertical-align: top; overflow: hidden;}
+.embeddedOutputsMatrixElement.inlineElement {}
+.embeddedOutputsMatrixElement.inlineElement .topHeaderWrapper {display: none;}
+.embeddedOutputsMatrixElement.inlineElement .veTable .body {padding-top: 0 !important; max-height: 100px;}
+.inlineElement .matrixElement {max-height: 300px;}
+.embeddedOutputsMatrixElement.rightPaneElement {}
+.rightPaneElement .matrixElement,.rtcDataTipElement .matrixElement {overflow: hidden; padding-left: 9px;}
+.rightPaneElement .matrixElement {margin-bottom: -1px;}
+.embeddedOutputsMatrixElement .matrixElement .valueContainer,.eoOutputWrapper .matrixElement .valueContainer,.rtcDataTipElement .matrixElement .valueContainer {white-space: nowrap; margin-bottom: 3px;}
+.embeddedOutputsMatrixElement .matrixElement .valueContainer .horizontalEllipsis.hide,.embeddedOutputsMatrixElement .matrixElement .verticalEllipsis.hide,.eoOutputWrapper .matrixElement .valueContainer .horizontalEllipsis.hide,.eoOutputWrapper .matrixElement .verticalEllipsis.hide,.rtcDataTipElement .matrixElement .valueContainer .horizontalEllipsis.hide,.rtcDataTipElement .matrixElement .verticalEllipsis.hide {display: none;}
+.embeddedOutputsVariableMatrixElement .matrixElement .valueContainer.hideEllipses .verticalEllipsis, .embeddedOutputsVariableMatrixElement .matrixElement .valueContainer.hideEllipses .horizontalEllipsis {display:none;}
+.embeddedOutputsMatrixElement .matrixElement .valueContainer .horizontalEllipsis,.eoOutputWrapper .matrixElement .valueContainer .horizontalEllipsis {margin-bottom: -3px;}
+.eoOutputWrapper .embeddedOutputsVariableMatrixElement .matrixElement .valueContainer {cursor: default !important;}
+.embeddedOutputsVariableElement {white-space: pre-wrap; word-wrap: break-word; min-height: 18px; max-height: 250px; overflow: auto;}
+.variableElement {}
+.embeddedOutputsVariableElement.inlineElement {}
+.inlineElement .variableElement {}
+.embeddedOutputsVariableElement.rightPaneElement {min-height: 16px;}
+.rightPaneElement .variableElement {padding-top: 2px; padding-left: 9px;}
+.variableNameElement {margin-bottom: 3px; display: inline-block;}
+.matrixElement .horizontalEllipsis,.rtcDataTipElement .matrixElement .horizontalEllipsis {display: inline-block; margin-top: 3px; width: 30px; height: 12px; background-repeat: no-repeat; background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAJCAYAAADO1CeCAAAAJUlEQVR42mP4//8/A70xw0i29BUDFPxnAEtTW37wWDqakIa4pQDvOOG89lHX2gAAAABJRU5ErkJggg==");}
+.matrixElement .verticalEllipsis,.textElement .verticalEllipsis,.rtcDataTipElement .matrixElement .verticalEllipsis,.rtcDataTipElement .textElement .verticalEllipsis {margin-left: 35px; width: 12px; height: 30px; background-repeat: no-repeat; background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAZCAYAAAAIcL+IAAAALklEQVR42mP4//8/AzGYgWyFMECMwv8QddRS+P//KyimlmcGUOFoOI6GI/UVAgDnd8Dd4+NCwgAAAABJRU5ErkJggg==");}
+.S8 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 4px 4px 0px 0px; padding: 6px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }
+.S9 { margin: 3px 10px 5px 4px; padding: 0px; line-height: 20px; min-height: 0px; white-space: pre-wrap; color: rgb(60, 60, 60); font-family: Helvetica, Arial, sans-serif; font-style: normal; font-size: 20px; font-weight: 700; text-align: left;  }
+.embeddedOutputsErrorElement {min-height: 18px; max-height: 250px; overflow: auto;}
+.embeddedOutputsErrorElement.inlineElement {}
+.embeddedOutputsErrorElement.rightPaneElement {}
+.embeddedOutputsWarningElement{min-height: 18px; max-height: 250px; overflow: auto;}
+.embeddedOutputsWarningElement.inlineElement {}
+.embeddedOutputsWarningElement.rightPaneElement {}
+.diagnosticMessage-wrapper {font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 12px;}
+.diagnosticMessage-wrapper.diagnosticMessage-warningType {color: rgb(255,100,0);}
+.diagnosticMessage-wrapper.diagnosticMessage-warningType a {color: rgb(255,100,0); text-decoration: underline;}
+.diagnosticMessage-wrapper.diagnosticMessage-errorType {color: rgb(230,0,0);}
+.diagnosticMessage-wrapper.diagnosticMessage-errorType a {color: rgb(230,0,0); text-decoration: underline;}
+.diagnosticMessage-wrapper .diagnosticMessage-messagePart,.diagnosticMessage-wrapper .diagnosticMessage-causePart {white-space: pre-wrap;}
+.diagnosticMessage-wrapper .diagnosticMessage-stackPart {white-space: pre;}
+.embeddedOutputsTextElement,.embeddedOutputsVariableStringElement {white-space: pre; word-wrap: initial; min-height: 18px; max-height: 250px; overflow: auto;}
+.textElement,.rtcDataTipElement .textElement {padding-top: 3px;}
+.embeddedOutputsTextElement.inlineElement,.embeddedOutputsVariableStringElement.inlineElement {}
+.inlineElement .textElement {}
+.embeddedOutputsTextElement.rightPaneElement,.embeddedOutputsVariableStringElement.rightPaneElement {min-height: 16px;}
+.rightPaneElement .textElement {padding-top: 2px; padding-left: 9px;}
+.S10 { border-left: 1px solid rgb(233, 233, 233); border-right: 1px solid rgb(233, 233, 233); border-top: 1px solid rgb(233, 233, 233); border-bottom: 1px solid rgb(233, 233, 233); border-radius: 4px; padding: 6px 45px 4px 13px; line-height: 17.234px; min-height: 18px; white-space: nowrap; color: rgb(0, 0, 0); font-family: Menlo, Monaco, Consolas, "Courier New", monospace; font-size: 14px;  }</style></head><body><div class = rtcContent><h1  class = 'S0'><span>Basic Estimation</span></h1><div  class = 'S1'><span>To estimate the parameters from a record, the method estimateParameter can be used. Multiple settings are available, the fitRoutine property controls what kind of optimisation scheme is used, while objectiveMethod determines the objective function that is used.</span></div><div  class = 'S1'><span>This method requires the recorded series as a column vector and the time interval. If multiple fits are required, a matrix with of records can be provided where each record is a column of the matrix.</span></div><div  class = 'S1'><span>This will then output a matrix of parameter estimates with each column being the parameter estimate for the corresponding record. For example we may use our simulated Gaussian processes:</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S2'><span style="white-space: pre;"><span>sdf = @spectralFitting.genJONSWAPsdf;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>theta = [0.7;0.7;3.3;4];</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>lb = [0;0;1;1];</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>ub = Inf(4,1);</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>waveSpecModel = spectralFitting.SpectralModel(sdf,theta,lb,ub);</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>N = 2048;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>Delta = 1/2;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>[gp1,gp2] = waveSpecModel.simulateGaussianProcess(N,Delta);</span></span></div></div></div><div  class = 'S5'><span>Then obtain an estimate using</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S2'><span style="white-space: pre;"><span>waveSpecModel.fitRoutine = </span><span style="color: rgb(255, 215, 0);">'fmincon'</span><span>;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>waveSpecModel.objectiveMethod = </span><span style="color: rgb(255, 215, 0);">'debiasedWhittle'</span><span>;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>[parameterEstimate,objVal] = waveSpecModel.estimateParameter([gp1,gp2],Delta);</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S6'><span style="white-space: pre;"><span>display(parameterEstimate)</span></span></div><div  class = 'S7'><div class="inlineElement eoOutputWrapper embeddedOutputsVariableMatrixElement" uid="0758E700" data-testid="output_0" data-width="1128" style="width: 1158px; white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="matrixElement veSpecifier saveLoad" style="white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="veVariableName variableNameElement double" style="width: 1128px; white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="headerElementClickToInteract" style="white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><span style="white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">parameterEstimate = </span><span class="veVariableValueSummary veMetaSummary" style="white-space: normal; font-style: normal; color: rgb(179, 179, 179); font-size: 12px;">4×2</span></div></div><div class="valueContainer" data-layout="{&quot;columnWidth&quot;:132,&quot;totalColumns&quot;:&quot;2&quot;,&quot;totalRows&quot;:&quot;4&quot;,&quot;charsPerColumn&quot;:20}" style="white-space: nowrap; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="variableValue" style="width: 266px; white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">   0.674522676424284   0.688452157745138
+   0.708899672571682   0.681207505480823
+   2.735475175380028  20.987373552894894
+   4.013138385311031   3.981953274582354
+</div><div class="horizontalEllipsis hide" style="white-space: nowrap; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"></div><div class="verticalEllipsis hide" style="white-space: nowrap; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"></div></div></div></div></div></div></div><div  class = 'S5'><span>Each column is the estimated parameter vector for the corresponding record.</span></div><div  class = 'S1'><span>The optional second output is the value of the objective function at the estimated parameter</span></div><div class="CodeBlock"><div class="inlineWrapper outputs"><div  class = 'S8'><span style="white-space: pre;"><span>display(objVal)</span></span></div><div  class = 'S7'><div class="inlineElement eoOutputWrapper embeddedOutputsVariableMatrixElement" uid="328AB227" data-testid="output_1" data-width="1128" style="width: 1158px; white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="matrixElement veSpecifier saveLoad" style="white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="veVariableName variableNameElement double" style="width: 1128px; white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="headerElementClickToInteract" style="white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><span style="white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">objVal = </span><span class="veVariableValueSummary veMetaSummary" style="white-space: normal; font-style: normal; color: rgb(179, 179, 179); font-size: 12px;">1×2</span></div></div><div class="veScalingFactor" style="white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">10<sup>3</sup><span class="multiply" style="white-space: normal; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"> ×</span></div><div class="valueContainer" data-layout="{&quot;columnWidth&quot;:132,&quot;totalColumns&quot;:&quot;2&quot;,&quot;totalRows&quot;:&quot;1&quot;,&quot;charsPerColumn&quot;:20}" style="white-space: nowrap; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"><div class="variableValue" style="width: 266px; white-space: pre; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;">  -4.503151119398953  -4.254292280816069
+</div><div class="horizontalEllipsis hide" style="white-space: nowrap; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"></div><div class="verticalEllipsis hide" style="white-space: nowrap; font-style: normal; color: rgb(64, 64, 64); font-size: 12px;"></div></div></div></div></div></div></div><div  class = 'S5'><span>Again with columns corresponding to different records</span></div><h2  class = 'S9'><span>Available Objective Functions</span></h2><div  class = 'S1'><span>Other objective functions that are available can be seen by trying to set an unknown method:</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S2'><span style="white-space: pre;"><span style="color: rgb(255, 121, 198);">try</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>    waveSpecModel.objectiveMethod = </span><span style="color: rgb(255, 215, 0);">'unknownMethod'</span><span>;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(255, 121, 198);">catch </span><span>ME</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>    display(ME.message)</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S6'><span style="white-space: pre;"><span style="color: rgb(255, 121, 198);">end</span></span></div><div  class = 'S7'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="C5184514" data-testid="output_2" data-width="1128" data-height="104" data-hashorizontaloverflow="false" style="width: 1158px; max-height: 261px;"><div class="textElement">Error setting property 'objectiveMethod' of class 'spectralFitting.SpectralModel'. Value must be a member of this set:
+    'debiasedWhittle'
+    'Whittle'
+    'aliasedWhittle'
+    'leastSquares'
+    'bartlettLeastSquares'
+    'maximumLikelihood'</div></div></div></div></div><div  class = 'S5'><span>Note that maximumLikelihood assumes the process is Gaussian, and is not a very efficient implementation of that method, this toolbox should only really be used for the other methods or for reproducing figures.</span></div><h2  class = 'S9'><span>Numerical Optimisation</span></h2><div  class = 'S1'><span>Other fit routines are also available. A list can be again seen in the error message</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S2'><span style="white-space: pre;"><span style="color: rgb(255, 121, 198);">try</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>    waveSpecModel.fitRoutine = </span><span style="color: rgb(255, 215, 0);">'unknownMethod'</span><span>;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(255, 121, 198);">catch </span><span>ME</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>    display(ME.message)</span></span></div></div><div class="inlineWrapper outputs"><div  class = 'S6'><span style="white-space: pre;"><span style="color: rgb(255, 121, 198);">end</span></span></div><div  class = 'S7'><div class="inlineElement eoOutputWrapper embeddedOutputsTextElement" uid="43E4F470" data-testid="output_3" data-width="1128" data-height="75" data-hashorizontaloverflow="false" style="width: 1158px; max-height: 261px;"><div class="textElement">Error setting property 'fitRoutine' of class 'spectralFitting.SpectralModel'. Value must be a member of this set:
+    'fminsearch'
+    'fmincon'
+    'global'
+    'sequential'</div></div></div></div></div><div  class = 'S5'><span>fminsearch is the default option. It is initialised for each record at the parameter property.</span></div><div  class = 'S1'><span>fmincon used gradient and hessian information, and usually is faster than fminsearch.</span></div><div  class = 'S1'><span>global uses a global solver utilising fmincon, it can be slow.</span></div><div  class = 'S1'><span>sequential uses a global solver for the first record, then fmincon initialising from the parameter estimated from the previous record.</span></div><h2  class = 'S9'><span>Differencing</span></h2><div  class = 'S1'><span>Differencing is often necessary when the periodogram is correlated. Differencing can be used with any objective method except maximumLikelihood.</span></div><div  class = 'S1'><span>To use differencing, set the following flag to true and run (by default it is set to false):</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S2'><span style="white-space: pre;"><span>waveSpecModel.useDifferencing = true;</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>parameterEstimate = waveSpecModel.estimateParameter([gp1,gp2],Delta);</span></span></div></div></div><h2  class = 'S9'><span>Filtering</span></h2><div  class = 'S1'><span>Frequencies can convinently be removed from any frequency domain objective method (i.e. not maximumLikelihood) by providing a vector of logical values as input, that is of length </span><span texencoding="\lfloor N/2 \rfloor+1" style="vertical-align:-5px"><img src="data:image/png;base64,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" width="68" height="17.5" /></span><span>, where </span><span style="font-family: STIXGeneral, STIXGeneral-webfont, serif; font-style: italic; font-weight: 400; color: rgb(0, 0, 0);">N</span><span> is the length of the timeseries.</span></div><div  class = 'S1'><span>For wave models, it is often useful to remove contributions with an angular frequency less than 0.35 as the spectral density function is numerically unsable in this region. This can be achived by doing the following.</span></div><div  class = 'S1'><span>Choose M, based on if we have differenced and use this to construct a vector of Fourier frequencies</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S2'><span style="white-space: pre;"><span style="color: rgb(255, 121, 198);">if </span><span>waveSpecModel.useDifferencing</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>    M = N-1;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(255, 121, 198);">else</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span>    M = N;</span></span></div></div><div class="inlineWrapper"><div  class = 'S3'><span style="white-space: pre;"><span style="color: rgb(255, 121, 198);">end</span></span></div></div><div class="inlineWrapper"><div  class = 'S4'><span style="white-space: pre;"><span>omega = 2*pi/Delta/M*(1:floor(M/2)+1)';</span></span></div></div></div><div  class = 'S5'><span>Calculate a logical vector to determine which values of omega are bigger than 0.35</span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>fitIndex = omega &gt; 0.35;</span></span></div></div></div><div  class = 'S5'><span></span></div><div class="CodeBlock"><div class="inlineWrapper"><div  class = 'S10'><span style="white-space: pre;"><span>parameterEstimate = waveSpecModel.estimateParameter([gp1,gp2],Delta,fitIndex);</span></span></div></div></div><div  class = 'S5'><span>Notice that we have to use a different fitIndex vector if we are using differencing. This is because the differenced process is length </span><span texencoding="N-1" style="vertical-align:-5px"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE8AAAAjCAYAAADVAlenAAADLUlEQVRoQ+3ZT6hVVRTH8Y8a2R8MLWkQkTQIDdEGgQ0aiElBBpXiv9JMqIiMghCkBiYY/aGSIGhWUUSWKSgWRYUTtYEOgoKMaBBBNJBIy1FiKgvWicvt/nn3nPPu9co5cOHy7l577fXd6+z1W/tN0TylCUwpbdkYauBVSIIGXgOvAoEKpk3mNfAqEKhg2i/zpuMerMWq9HMKy3Ggi9/bsQIbcXWO+Qxv4usKax2W6Q14Ct/io15O+8ErbK/Eq9iUf3gZW/Fvl8lj3mewAy9hG84MK/qSfgJaxPdYbvp6fFgHvJhjA97PyY7gAfzSY/Lncgfvx9GSAQ3DbCYexVRcn2sOv7XBuxSvZDYVAYXDd7pEdznewLV4BCeGQaGkj0twNj/z8AkW1AnvukzhY1iCm7G3B5g52Ikv8CLOlQxs2GZzsQu31AkvikC8/+uwGk+jV+G4E1/hrjEpEsUmTQq8OPwDxEO5K5F1M7KCbsE/bSkS41fiQfw67PSp4K92eAHpLfyWFfaqPOtCrvyYEuaHlgUX4+Oc6wS2QmyTblo7vGLC57E/lx9F4O38vjmLQ3GuFeNf61fqJx3F4A5qh3cvXs/X8Ptcz40pIG/rUDg6jR88jNFY1ApvGl7ATamF/sqYWkVwa+HoNn40KAb3Wiu82fgA33SQHPOxO2VLtF5xvl2Wr/N3FSRKdC7bB4/7P4vwvQY/lZijVni34lM83EFyRN8bLVvIlqJwROZ9nCq9W+/bL6aLBt7jeKLHTi7NMy8qbBSO4ymcQw/+3o/SBfh7bZlXtFhX4MkUxe3xzmqRLdHvhjyJLHwWpy9AOP2WVBu8osXak1Kkm+NW2RJj+jbU/SIY4e+1wStarMU42COgVtnyc5ukGSGHUq5rgVdIjmUTqFwxNu7r4qCPLI3blkLSlIpghEa1wFuYVfPvCdzbRayLsA/RVcRV1Lg+d+PzLp3T/2Jqv0m+BlFh4+IzdiGeLxNMSJCTXajETXNovXdTE44TvJBcd+C+7NOLfx38ifdwGIfwR3tQE72GHycYQ1trA68C6gZeA68CgQqmTeY18CoQqGDaZF4DrwKBCqbnAUEsrSQ1rqDqAAAAAElFTkSuQmCC" width="39.5" height="17.5" /></span><span> already, so we need to provide a logical vector of length </span><span texencoding="\lfloor (N-1)/2 \rfloor+1" style="vertical-align:-5px"><img src="data:image/png;base64,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" width="104" height="17.5" /></span><span>.</span></div><div  class = 'S1'><span>A different vector would also be necessary for bartlettLeastSquares. This can be easily obtained by replacing </span><span style="font-family: STIXGeneral, STIXGeneral-webfont, serif; font-style: italic; font-weight: 400; color: rgb(0, 0, 0);">N</span><span> with the desired window size.</span></div></div>
+<br>
+<!-- 
+##### SOURCE BEGIN #####
+%% Basic Estimation
+% To estimate the parameters from a record, the method estimateParameter can 
+% be used. Multiple settings are available, the fitRoutine property controls what 
+% kind of optimisation scheme is used, while objectiveMethod determines the objective 
+% function that is used.
+% 
+% This method requires the recorded series as a column vector and the time interval. 
+% If multiple fits are required, a matrix with of records can be provided where 
+% each record is a column of the matrix.
+% 
+% This will then output a matrix of parameter estimates with each column being 
+% the parameter estimate for the corresponding record. For example we may use 
+% our simulated Gaussian processes:
+
+sdf = @spectralFitting.genJONSWAPsdf;
+theta = [0.7;0.7;3.3;4];
+lb = [0;0;1;1];
+ub = Inf(4,1);
+waveSpecModel = spectralFitting.SpectralModel(sdf,theta,lb,ub);
+N = 2048;
+Delta = 1/2;
+[gp1,gp2] = waveSpecModel.simulateGaussianProcess(N,Delta);
+%% 
+% Then obtain an estimate using
+
+waveSpecModel.fitRoutine = 'fmincon';
+waveSpecModel.objectiveMethod = 'debiasedWhittle';
+[parameterEstimate,objVal] = waveSpecModel.estimateParameter([gp1,gp2],Delta);
+display(parameterEstimate)
+%% 
+% Each column is the estimated parameter vector for the corresponding record.
+% 
+% The optional second output is the value of the objective function at the estimated 
+% parameter
+
+display(objVal)
+%% 
+% Again with columns corresponding to different records
+%% Available Objective Functions
+% Other objective functions that are available can be seen by trying to set 
+% an unknown method:
+
+try
+    waveSpecModel.objectiveMethod = 'unknownMethod';
+catch ME
+    display(ME.message)
+end
+%% 
+% Note that maximumLikelihood assumes the process is Gaussian, and is not a 
+% very efficient implementation of that method, this toolbox should only really 
+% be used for the other methods or for reproducing figures.
+%% Numerical Optimisation
+% Other fit routines are also available. A list can be again seen in the error 
+% message
+
+try
+    waveSpecModel.fitRoutine = 'unknownMethod';
+catch ME
+    display(ME.message)
+end
+%% 
+% fminsearch is the default option. It is initialised for each record at the 
+% parameter property.
+% 
+% fmincon used gradient and hessian information, and usually is faster than 
+% fminsearch.
+% 
+% global uses a global solver utilising fmincon, it can be slow.
+% 
+% sequential uses a global solver for the first record, then fmincon initialising 
+% from the parameter estimated from the previous record.
+%% Differencing
+% Differencing is often necessary when the periodogram is correlated. Differencing 
+% can be used with any objective method except maximumLikelihood.
+% 
+% To use differencing, set the following flag to true and run (by default it 
+% is set to false):
+
+waveSpecModel.useDifferencing = true;
+parameterEstimate = waveSpecModel.estimateParameter([gp1,gp2],Delta);
+%% Filtering
+% Frequencies can convinently be removed from any frequency domain objective 
+% method (i.e. not maximumLikelihood) by providing a vector of logical values 
+% as input, that is of length $\lfloor N/2 \rfloor+1$, where $N$ is the length 
+% of the timeseries.
+% 
+% For wave models, it is often useful to remove contributions with an angular 
+% frequency less than 0.35 as the spectral density function is numerically unsable 
+% in this region. This can be achived by doing the following.
+% 
+% Choose M, based on if we have differenced and use this to construct a vector 
+% of Fourier frequencies
+
+if waveSpecModel.useDifferencing
+    M = N-1;
+else
+    M = N;
+end
+omega = 2*pi/Delta/M*(1:floor(M/2)+1)';
+%% 
+% Calculate a logical vector to determine which values of omega are bigger than 
+% 0.35
+
+fitIndex = omega > 0.35;
+%% 
+% 
+
+parameterEstimate = waveSpecModel.estimateParameter([gp1,gp2],Delta,fitIndex);
+%% 
+% Notice that we have to use a different fitIndex vector if we are using differencing. 
+% This is because the differenced process is length $N-1$ already, so we need 
+% to provide a logical vector of length $\lfloor (N-1)/2 \rfloor+1$.
+% 
+% A different vector would also be necessary for bartlettLeastSquares. This 
+% can be easily obtained by replacing $N$ with the desired window size.
+##### SOURCE END #####
+--></body></html>

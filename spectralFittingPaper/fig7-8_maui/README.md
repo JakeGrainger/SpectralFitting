@@ -1,0 +1,2 @@
+The data cannot be provided in raw form; however, included are images for the sea states that could not be included in the main paper.
+The provided plots are all untruncated, and include the sea states that were truncated in the paper.

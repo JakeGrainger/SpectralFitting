@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="matlabStyle.css">
+    <title>Features</title>
+</head>
+
+<body>
+    <div class="spfit_container">
+        <h1>Features</h1>
+        <hr />
+        <p class="tagline">
+            Learn about the basic feature set
+        </p><br />
+        <p>
+            Spectral Fitting Toolbox includes a variety of different features, including model fitting, simulation and non-parametric spectral density estimation.
+        </p><br />
+        <div class="spfit_container" id="modelFitting">
+            <h2>Model Fitting</h2><hr />
+            <p>
+                The main purpose of Spectral Fitting Toolbox is to enable the user to fit models for the spectral density function of a continuous time stochastic process to observed data.
+                Spectral Fitting Toolbox comes with a variety of different techniques for achieving this.
+                These range from curve fitting techniques such as least squares, to quasi-likelihoods such as the De-biased Whittle likelihood.
+            </p>
+            <p>
+                Spectral Fitting Toolbox requires the user to provide a parametric form for the spectral density function of the continuous time stochastic process.
+                The user may also specifify the spectral density of the sampled, discrete time, process; or the autocovariance.
+                However, Spectral Fitting Toolbox also has procedures to approximate these directly from the spectral density function of the continuous time process.
+            </p>
+        </div><br />
+        <div class="spfit_container" id="simulation">
+            <h2>Simulation</h2><hr />
+            <p>
+                As a secondary feature, Spectral Fitting Toolbox also allows the user to simulate Gaussian processes with a defined spectral density function.
+                Simulated processes simulate the Gaussian process that would arise from sampling a continuous time Gausssian process, with a given spectral density function, at a sampling interval defined by the user.
+            </p>
+        </div><br />
+        <div class="spfit_container" id="nonPara">
+            <h2>Non-parametric spectral density estimation</h2><hr />
+            <p>
+                Additionally, Spectral Fitting Toolbox also provides the user with classes to perform non-parametric estimation of the spectral density function.
+                These classes include methods to easily visualise the obtained estimate.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

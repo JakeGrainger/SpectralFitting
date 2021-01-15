@@ -1,0 +1,674 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>estimateParameter</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-08-21"><meta name="DC.source" content="estimateParameter.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#4">difference if applicable</a></li><li><a href="#5">check compatibility of objective with fitting</a></li><li><a href="#6">set indexing</a></li><li><a href="#7">start computations</a></li><li><a href="#8">perform fitting</a></li><li><a href="#10">helper functions</a></li><li><a href="#11">spectral estimates</a></li><li><a href="#12">objective functions</a></li><li><a href="#13">expected hessians</a></li><li><a href="#14">covariance of the debiased Whittle likelihood</a></li></ul></div><pre class="codeinput"><span class="keyword">function</span> [parameterArray,fvalArray,varParameterArray] = estimateParameter(obj,timeseries,Delta,fitIndex)
+</pre><pre class="codeinput"><span class="comment">% estimateParameter  Estimate parameters of a spectral model from data.</span>
+<span class="comment">%   estimateParameter(obj,timeseries,Delta,fitIndex) will estimate the</span>
+<span class="comment">%   parameters of a model defined by obj such that they best describe the</span>
+<span class="comment">%   timeseries provided. If timeseries is a matrix, then each column is</span>
+<span class="comment">%   treated as a seperate timeseries, and a parameter estimate is provided.</span>
+<span class="comment">%   Delta is the sampling interval of the timeseries and fitIndex is an</span>
+<span class="comment">%   optional logical vector specifying which frequencies should be used in</span>
+<span class="comment">%   the fitting.</span>
+<span class="comment">%</span>
+<span class="comment">%   For more information, see the Spectral Fitting Toolbox documentation.</span>
+</pre><pre class="codeinput">arguments <span class="comment">% error handling</span>
+    obj <span class="string">spectralFitting.SpectralModel</span>
+    timeseries <span class="string">{mustBeNumeric,mustBeNonempty,mustBeNonNan}</span>
+    Delta(1,1) {mustBeNumeric,mustBeNonempty,mustBeNonNan}
+    fitIndex(:,1) = []
+<span class="keyword">end</span>
+</pre><h2 id="4">difference if applicable</h2><pre class="codeinput"><span class="keyword">if</span> obj.useDifferencing
+    timeseries = diff(timeseries,1,1); <span class="comment">% differences the timeseries</span>
+<span class="keyword">end</span>
+<span class="comment">% check fitting index is sensible</span>
+<span class="keyword">switch</span> obj.objectiveMethod
+    <span class="keyword">case</span> <span class="string">'bartlettLeastSquares'</span>
+        <span class="keyword">if</span> isempty(fitIndex)
+            fitIndex = (2:floor(obj.bartlettWindowSize/2))'; <span class="comment">% if no fitIndex specified, then specify a fitIndex</span>
+        <span class="keyword">end</span>
+        testOmega = (1:floor(obj.bartlettWindowSize/2)+1)'; <span class="comment">% set up a test array if fitIndex is specified to check it works</span>
+    <span class="keyword">otherwise</span>
+        <span class="keyword">if</span> isempty(fitIndex)
+            fitIndex = (2:floor(length(timeseries)/2))'; <span class="comment">% if no fitIndex specified, then specify a fitIndex</span>
+        <span class="keyword">end</span>
+        testOmega = (1:floor(length(timeseries)/2)+1)'; <span class="comment">% set up a test array if fitIndex is specified to check it works</span>
+<span class="keyword">end</span>
+
+<span class="keyword">try</span>
+    testOmega(fitIndex); <span class="comment">% try fitIndex on testOmega</span>
+<span class="keyword">catch</span> ME
+    baseException = MException(<span class="string">'estimateParameter:badfitsubscript'</span>,<span class="keyword">...</span>
+        <span class="string">'fitIndex is not compatible with provided timeseries and objectiveMethod.'</span>);
+    baseException = addCause(baseException,ME);
+    throw(baseException)
+<span class="keyword">end</span>
+</pre><h2 id="5">check compatibility of objective with fitting</h2><pre class="codeinput">fminconOpts = obj.fminconOpts;
+<span class="keyword">switch</span> obj.objectiveMethod <span class="comment">% modify fminconOpts if maximumLikelihood is used</span>
+    <span class="keyword">case</span> <span class="string">'maximumLikelihood'</span>
+        <span class="keyword">if</span> strcmp(obj.fitRoutine,<span class="string">'fmincon'</span>)
+            error(<span class="string">'gradient based fmincon not yet compatible with maximumLikelihood'</span>)
+        <span class="keyword">end</span>
+<span class="comment">%         fminconOpts.HessianFcn = []; % because this is not available for ML (old code dont use)</span>
+        <span class="keyword">if</span> obj.useDifferencing <span class="comment">% return error if differencing is tried with maximum likelihood</span>
+            error(<span class="string">"%s not compatible with differencing."</span>,obj.fitRoutine)
+        <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="6">set indexing</h2><pre class="codeinput">obj.d2IndexCon = reshape(obj.hessIndex,[],1); <span class="comment">% used to specify which second derivatives are non-zero (probably should be a local variable and not a property)</span>
+</pre><h2 id="7">start computations</h2><pre class="codeinput"><span class="keyword">switch</span> obj.objectiveMethod
+    <span class="keyword">case</span> <span class="string">'bartlettLeastSquares'</span>
+        omega = computeOmega(obj.bartlettWindowSize,Delta,fitIndex); <span class="comment">% constuct a vector of angular frequencies, omega</span>
+        S = computeBartI(timeseries,Delta,fitIndex,obj.bartlettWindowSize); <span class="comment">% get S, the spectral estimate</span>
+        objectiveFunction = @(parameter,record) LS(obj,S(:,record),omega,Delta,parameter); <span class="comment">% make objective</span>
+    <span class="keyword">case</span> <span class="string">'maximumLikelihood'</span>
+        objectiveFunction = @(parameter,record) maximumLikelihood(obj,timeseries(:,record),Delta,parameter);
+    <span class="keyword">otherwise</span>
+        <span class="comment">% construct I</span>
+        omega = computeOmega(size(timeseries,1),Delta,fitIndex);
+        S = computeI(timeseries,Delta,fitIndex);
+        <span class="keyword">switch</span> obj.objectiveMethod
+            <span class="keyword">case</span> <span class="string">'leastSquares'</span>
+                objectiveFunction = @(parameter,record) LS(obj,S(:,record),omega,Delta,parameter);
+            <span class="keyword">case</span> <span class="string">'Whittle'</span>
+                objectiveFunction = @(parameter,record) Whittle(obj,S(:,record),omega,Delta,parameter);
+            <span class="keyword">case</span> <span class="string">'aliasedWhittle'</span>
+                objectiveFunction = @(parameter,record) aliasedWhittle(obj,S(:,record),omega,Delta,parameter);
+            <span class="keyword">case</span> <span class="string">'debiasedWhittle'</span>
+                objectiveFunction = @(parameter,record) debiasedWhittle(obj,S(:,record),size(timeseries,1),Delta,fitIndex,parameter);
+            <span class="keyword">otherwise</span>
+                ME = MException(<span class="string">'estimateParameter:unknownObjectiveMethod'</span>,<span class="keyword">...</span>
+                    <span class="string">'Unknown objective method.'</span>);
+                throw(ME)
+        <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="8">perform fitting</h2><pre class="codeinput">nRecord = size(timeseries,2);
+parameterArray = nan(length(obj.parameter),nRecord);
+fvalArray = nan(1,nRecord);
+<span class="keyword">switch</span> obj.fitRoutine
+    <span class="keyword">case</span> <span class="string">'fminsearch'</span>
+        <span class="keyword">for</span> iRecord = 1:nRecord
+            boundedObjFun = @(parameter) objectiveBound(obj.lowerBound,<span class="keyword">...</span>
+                obj.upperBound,@(parameter) objectiveFunction(parameter,iRecord),parameter);
+            [parameterArray(:,iRecord),fvalArray(:,iRecord)] =<span class="keyword">...</span>
+                fminsearch(boundedObjFun,obj.parameter,obj.fminsearchOpts);
+        <span class="keyword">end</span>
+    <span class="keyword">case</span> <span class="string">'fmincon'</span>
+        lb = obj.lowerBound;
+        ub = obj.upperBound;
+        <span class="keyword">for</span> iRecord = 1:nRecord
+            [parameterArray(:,iRecord),fvalArray(:,iRecord)] =<span class="keyword">...</span>
+                fmincon(@(parameter) objectiveFunction(parameter,iRecord),<span class="keyword">...</span>
+                obj.parameter,[],[],[],[],lb,ub,[],fminconOpts);
+        <span class="keyword">end</span>
+    <span class="keyword">case</span> <span class="string">'global'</span>
+        lb = obj.lowerBound;
+        ub = obj.upperBound;
+        <span class="keyword">for</span> iRecord = 1:nRecord
+            problem = createOptimProblem(<span class="string">'fmincon'</span>,<span class="keyword">...</span>
+                <span class="string">'objective'</span>, @(parameter) objectiveFunction(parameter,iRecord),<span class="keyword">...</span>
+                <span class="string">'x0'</span>,obj.parameter,<span class="string">'lb'</span>,lb,<span class="string">'ub'</span>,ub,<span class="keyword">...</span>
+                <span class="string">'options'</span>,fminconOpts);
+            gs = GlobalSearch(<span class="string">'Display'</span>,<span class="string">'off'</span>);
+            [parameterArray(:,iRecord),fvalArray(:,iRecord)] = run(gs,problem);
+        <span class="keyword">end</span>
+    <span class="keyword">case</span> <span class="string">'sequential'</span>
+        lb = obj.lowerBound;
+        ub = obj.upperBound;
+        problem = createOptimProblem(<span class="string">'fmincon'</span>,<span class="keyword">...</span>
+            <span class="string">'objective'</span>, @(parameter) objectiveFunction(parameter,1),<span class="keyword">...</span>
+            <span class="string">'x0'</span>,obj.parameter,<span class="string">'lb'</span>,lb,<span class="string">'ub'</span>,ub,<span class="keyword">...</span>
+            <span class="string">'options'</span>,fminconOpts);
+        gs = GlobalSearch(<span class="string">'Display'</span>,<span class="string">'off'</span>);
+        [parameterArray(:,1),fvalArray(:,1)] = run(gs,problem);
+        <span class="keyword">if</span> nRecord &gt; 1
+            <span class="keyword">for</span> iRecord = 2:nRecord
+                [parameterArray(:,iRecord),fvalArray(:,iRecord)] =<span class="keyword">...</span>
+                    fmincon(@(parameter) objectiveFunction(parameter,iRecord),<span class="keyword">...</span>
+                    parameterArray(:,iRecord-1),[],[],[],[],lb,ub,[],fminconOpts);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="comment">% get uncertainty</span>
+<span class="keyword">if</span> nargout == 3
+    <span class="keyword">switch</span> obj.objectiveMethod
+        <span class="keyword">case</span> <span class="string">'debiasedWhittle'</span>
+            varParameterArray = nan(length(obj.parameter),length(obj.parameter),nRecord);
+            <span class="keyword">for</span> iRecord = 1:nRecord
+                expHess = WhittleExpHess(obj,size(timeseries,1),Delta,fitIndex,<span class="keyword">...</span>
+                    parameterArray(:,iRecord));
+                covLikelihood = covDebiasedWhittle(obj,size(timeseries,1),Delta,fitIndex,<span class="keyword">...</span>
+                    parameterArray(:,iRecord));
+                varParameterArray(:,:,iRecord) = (expHess\covLikelihood)/expHess;
+            <span class="keyword">end</span>
+        <span class="keyword">otherwise</span>
+            varParameterArray = [];
+            warning([<span class="string">'Variance not implemented for this objective function, '</span><span class="keyword">...</span>
+                <span class="string">'returning empty array.'</span>])
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><h2 id="10">helper functions</h2><pre class="codeinput"><span class="keyword">function</span> varargout = objectiveBound(lb,ub,objectiveFunction,parameter)
+<span class="comment">% function to put bounds on the parameter space, to be used by fminsearch</span>
+<span class="keyword">if</span> any(parameter &lt; lb) || any(parameter &gt; ub)
+    varargout = mat2cell(Inf(nargout,1),ones(nargout,1));
+<span class="keyword">else</span>
+    [varargout{1:nargout}] = objectiveFunction(parameter);
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> sqhess = fullHess(hess,p)
+<span class="comment">% function to convert to full square Hessian matrix</span>
+sqhess = zeros(p);
+sqhess(tril(true(p))) = hess;
+sqhess = sqhess + sqhess' - diag(diag(sqhess));
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> fmix = crossMultiplyDerivative(deriv)
+<span class="comment">% function to cross multiply first derivative for use with upper triangular</span>
+<span class="comment">% hessian</span>
+p = size(deriv,2);
+f1 = repelem(deriv,1,p:-1:1);
+f2 = repmat(deriv,1,p);
+f2 = f2(:,reshape(tril(true(p)),p^2,1));
+fmix = f1.*f2;
+<span class="keyword">end</span>
+</pre><h2 id="11">spectral estimates</h2><pre class="codeinput"><span class="keyword">function</span> S = computeI(timeseries,Delta,fitIndex)
+<span class="comment">% function to calculate bartlett periodogram and corresponding omega</span>
+<span class="comment">% S</span>
+S = Delta/(size(timeseries,1)*2*pi)*abs(fft(timeseries,[],1)).^2;
+S = S(fitIndex,:);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> S = computeBartI(timeseries,Delta,fitIndex,windowSize)
+<span class="comment">% function to calculate bartlett periodogram and corresponding omega</span>
+<span class="comment">% S</span>
+nSegments = floor(length(timeseries)/windowSize);
+segmentPeriodograms = nan(windowSize,size(timeseries,2),nSegments);
+<span class="keyword">for</span> iSeg = 1:nSegments
+    segmentPeriodograms(:,:,iSeg) = Delta/(windowSize*2*pi)*<span class="keyword">...</span>
+        abs(fft(timeseries((iSeg-1)*windowSize+1:iSeg*windowSize,:),[],1)).^2;
+<span class="keyword">end</span>
+S = mean(segmentPeriodograms,3);
+S = S(fitIndex,:);
+
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> omega = computeOmega(N,Delta,index)
+<span class="comment">% function to compute omega</span>
+omega = 2*pi/Delta*(0:1/N:1/2);
+omega = omega(index)';
+<span class="keyword">end</span>
+</pre><h2 id="12">objective functions</h2><pre class="codeinput"><span class="keyword">function</span> [fval,deriv,hess] = LS(obj,S,omega,Delta,parameter)
+<span class="comment">% subfunction to calculate least squares objective</span>
+[density{1:nargout}] = parSpectralDensity(obj,omega,Delta,parameter); <span class="comment">% get density and derivatives</span>
+diffS = density{1}-S; <span class="comment">% calculate difference for use later</span>
+fval = sum(diffS.^2); <span class="comment">% calculate least squares value</span>
+<span class="keyword">if</span> nargout &gt; 1
+    deriv = 2*sum(density{2}.*diffS,1); <span class="comment">% calculate derivative if required</span>
+<span class="keyword">end</span>
+<span class="keyword">if</span> nargout &gt; 2
+    fmix = crossMultiplyDerivative(density{2});
+    d2part = zeros(1,size(fmix,2));
+    d2part(:,reshape(obj.hessIndex,[],1)) = sum(density{3}.*diffS,1);
+    hess = fullHess(2*(d2part(:,reshape(tril(true(size(density{2},2))),[],1))+sum(fmix,1)),<span class="keyword">...</span>
+        size(density{2},2)); <span class="comment">% calculate hessian if required</span>
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> [fval,deriv,hess] = generalWhittle(obj,density,S)
+<span class="comment">% subfunction to calculate whittle likelihood that takes a density argument</span>
+<span class="comment">% so can be used by specific versions of the whittle likelihood</span>
+fval = sum(log(density{1}))+sum(S./density{1});
+<span class="keyword">if</span> nargout &gt; 1
+    deriv = sum(density{2}.*(1./density{1}-S./density{1}.^2),1);
+<span class="keyword">end</span>
+<span class="keyword">if</span> nargout &gt; 2
+    fmix = crossMultiplyDerivative(density{2});
+    d2part = zeros(1,size(fmix,2));
+    d2part(:,obj.d2IndexCon) = sum(density{3}.*(1./density{1}-S./density{1}.^2),1);
+    hess = fullHess(d2part(:,obj.d2IndexUse)+<span class="keyword">...</span>
+        sum(fmix.*(-1./density{1}.^2+2*S./density{1}.^3),1),size(density{2},2));
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> varargout = Whittle(obj,S,omega,Delta,parameter)
+<span class="comment">% subfunction to compute standard Whittle likelihood</span>
+[density{1:nargout}] = parSpectralDensity(obj,omega,Delta,parameter);
+[varargout{1:nargout}] = generalWhittle(obj,density,S);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> varargout = aliasedWhittle(obj,S,omega,Delta,parameter)
+<span class="comment">% subfunction to compute aliased Whittle likelihood</span>
+[density{1:nargout}] = parAliasedSpectralDensity(obj,omega,Delta,parameter);
+[varargout{1:nargout}] = generalWhittle(obj,density,S);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> varargout = debiasedWhittle(obj,S,N,Delta,index,parameter)
+<span class="comment">% subfunction to compute debiased Whittle likelihood</span>
+[density{1:nargout}] = parExpectedPeriodogram(obj,N,Delta,parameter,index);
+[varargout{1:nargout}] = generalWhittle(obj,density,S);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> varargout = maximumLikelihood(obj,timeseries,Delta,parameter)
+<span class="comment">% subfunction to calculate maximum likelihood for Gaussian process</span>
+[autoCov{1:nargout}] = parAutoCovariance(obj,length(timeseries),Delta,parameter);
+cholSigma = chol(toeplitz(autoCov{1}));
+invSigma = inv(cholSigma)/cholSigma';
+varargout{1} = 0.5*(2*sum(log(diag(cholSigma))) + (timeseries)'*invSigma*(timeseries));
+<span class="keyword">if</span> nargout == 2
+    deriv = nan(1,size(autoCov{2},2));
+    <span class="keyword">for</span> iPar = 1:size(autoCov{2},2)
+        dSigma = toeplitz(autoCov{2}(:,iPar));
+        a = invSigma*timeseries;
+        deriv(1,iPar) = 0.5*trace((a*a'-invSigma)*dSigma);
+    <span class="keyword">end</span>
+    varargout{2} = deriv;
+<span class="keyword">end</span>
+
+<span class="keyword">end</span>
+</pre><h2 id="13">expected hessians</h2><pre class="codeinput"><span class="keyword">function</span> expHess = WhittleExpHess(obj,N,Delta,index,parameter)
+<span class="comment">% subfunction to calculate the expected hessian of the debiased Whittle</span>
+<span class="comment">% likelhood</span>
+[density,derivative] = parExpectedPeriodogram(obj,N,Delta,parameter,index);
+fmix = crossMultiplyDerivative(derivative);
+expHess = fullHess(sum(fmix./(density).^2,1),size(derivative,2));
+<span class="keyword">end</span>
+</pre><h2 id="14">covariance of the debiased Whittle likelihood</h2><pre class="codeinput"><span class="keyword">function</span> covLikelihood = covDebiasedWhittle(obj,N,Delta,index,parameter)
+<span class="comment">% function to calculate the covariance of the debiased Whittle likelihood</span>
+[EI,dEI] = parExpectedPeriodogram(obj,N,Delta,parameter,index);
+a = -dEI./(EI.^2); <span class="comment">% pxN</span>
+a = [a;a(end:-1:1,:)]; <span class="comment">% add for 2 sided version</span>
+p = length(parameter);
+covI = parCovPeriodogram(obj,N,Delta,parameter);
+index = [index;index(end:-1:1)]; <span class="comment">% add for 2 sided version</span>
+covIused = covI(index,index);
+covLikelihood = nan(p,p);
+<span class="keyword">for</span> r = 1:p
+    <span class="keyword">for</span> s = r:p
+        covLikelihood(r,s) = a(:,r)'*covIused*a(:,s);
+        <span class="keyword">if</span> r~=s
+            covLikelihood(s,r) = covLikelihood(r,s);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+function [parameterArray,fvalArray,varParameterArray] = estimateParameter(obj,timeseries,Delta,fitIndex)
+% estimateParameter  Estimate parameters of a spectral model from data.
+%   estimateParameter(obj,timeseries,Delta,fitIndex) will estimate the
+%   parameters of a model defined by obj such that they best describe the
+%   timeseries provided. If timeseries is a matrix, then each column is
+%   treated as a seperate timeseries, and a parameter estimate is provided.
+%   Delta is the sampling interval of the timeseries and fitIndex is an
+%   optional logical vector specifying which frequencies should be used in
+%   the fitting.
+%
+%   For more information, see the Spectral Fitting Toolbox documentation.
+arguments % error handling
+    obj spectralFitting.SpectralModel
+    timeseries {mustBeNumeric,mustBeNonempty,mustBeNonNan}
+    Delta(1,1) {mustBeNumeric,mustBeNonempty,mustBeNonNan}
+    fitIndex(:,1) = []
+end
+%% difference if applicable
+if obj.useDifferencing
+    timeseries = diff(timeseries,1,1); % differences the timeseries
+end
+% check fitting index is sensible
+switch obj.objectiveMethod
+    case 'bartlettLeastSquares'
+        if isempty(fitIndex)
+            fitIndex = (2:floor(obj.bartlettWindowSize/2))'; % if no fitIndex specified, then specify a fitIndex
+        end
+        testOmega = (1:floor(obj.bartlettWindowSize/2)+1)'; % set up a test array if fitIndex is specified to check it works
+    otherwise
+        if isempty(fitIndex)
+            fitIndex = (2:floor(length(timeseries)/2))'; % if no fitIndex specified, then specify a fitIndex
+        end
+        testOmega = (1:floor(length(timeseries)/2)+1)'; % set up a test array if fitIndex is specified to check it works
+end
+
+try
+    testOmega(fitIndex); % try fitIndex on testOmega
+catch ME
+    baseException = MException('estimateParameter:badfitsubscript',...
+        'fitIndex is not compatible with provided timeseries and objectiveMethod.');
+    baseException = addCause(baseException,ME);
+    throw(baseException)
+end
+%% check compatibility of objective with fitting
+fminconOpts = obj.fminconOpts;
+switch obj.objectiveMethod % modify fminconOpts if maximumLikelihood is used
+    case 'maximumLikelihood'
+        if strcmp(obj.fitRoutine,'fmincon')
+            error('gradient based fmincon not yet compatible with maximumLikelihood')
+        end
+%         fminconOpts.HessianFcn = []; % because this is not available for ML (old code dont use)
+        if obj.useDifferencing % return error if differencing is tried with maximum likelihood
+            error("%s not compatible with differencing.",obj.fitRoutine)
+        end
+end
+
+%% set indexing
+obj.d2IndexCon = reshape(obj.hessIndex,[],1); % used to specify which second derivatives are non-zero (probably should be a local variable and not a property)
+
+%% start computations
+switch obj.objectiveMethod
+    case 'bartlettLeastSquares'
+        omega = computeOmega(obj.bartlettWindowSize,Delta,fitIndex); % constuct a vector of angular frequencies, omega
+        S = computeBartI(timeseries,Delta,fitIndex,obj.bartlettWindowSize); % get S, the spectral estimate
+        objectiveFunction = @(parameter,record) LS(obj,S(:,record),omega,Delta,parameter); % make objective
+    case 'maximumLikelihood'
+        objectiveFunction = @(parameter,record) maximumLikelihood(obj,timeseries(:,record),Delta,parameter);
+    otherwise
+        % construct I
+        omega = computeOmega(size(timeseries,1),Delta,fitIndex);
+        S = computeI(timeseries,Delta,fitIndex);
+        switch obj.objectiveMethod
+            case 'leastSquares'
+                objectiveFunction = @(parameter,record) LS(obj,S(:,record),omega,Delta,parameter);
+            case 'Whittle'
+                objectiveFunction = @(parameter,record) Whittle(obj,S(:,record),omega,Delta,parameter);
+            case 'aliasedWhittle'
+                objectiveFunction = @(parameter,record) aliasedWhittle(obj,S(:,record),omega,Delta,parameter);
+            case 'debiasedWhittle'
+                objectiveFunction = @(parameter,record) debiasedWhittle(obj,S(:,record),size(timeseries,1),Delta,fitIndex,parameter);
+            otherwise
+                ME = MException('estimateParameter:unknownObjectiveMethod',...
+                    'Unknown objective method.');
+                throw(ME)
+        end
+end
+%% perform fitting
+nRecord = size(timeseries,2);
+parameterArray = nan(length(obj.parameter),nRecord);
+fvalArray = nan(1,nRecord);
+switch obj.fitRoutine
+    case 'fminsearch'
+        for iRecord = 1:nRecord
+            boundedObjFun = @(parameter) objectiveBound(obj.lowerBound,...
+                obj.upperBound,@(parameter) objectiveFunction(parameter,iRecord),parameter);
+            [parameterArray(:,iRecord),fvalArray(:,iRecord)] =...
+                fminsearch(boundedObjFun,obj.parameter,obj.fminsearchOpts);
+        end
+    case 'fmincon'
+        lb = obj.lowerBound;
+        ub = obj.upperBound;
+        for iRecord = 1:nRecord
+            [parameterArray(:,iRecord),fvalArray(:,iRecord)] =...
+                fmincon(@(parameter) objectiveFunction(parameter,iRecord),...
+                obj.parameter,[],[],[],[],lb,ub,[],fminconOpts);
+        end
+    case 'global'
+        lb = obj.lowerBound;
+        ub = obj.upperBound;
+        for iRecord = 1:nRecord
+            problem = createOptimProblem('fmincon',...
+                'objective', @(parameter) objectiveFunction(parameter,iRecord),...
+                'x0',obj.parameter,'lb',lb,'ub',ub,...
+                'options',fminconOpts);
+            gs = GlobalSearch('Display','off');
+            [parameterArray(:,iRecord),fvalArray(:,iRecord)] = run(gs,problem);
+        end
+    case 'sequential'
+        lb = obj.lowerBound;
+        ub = obj.upperBound;
+        problem = createOptimProblem('fmincon',...
+            'objective', @(parameter) objectiveFunction(parameter,1),...
+            'x0',obj.parameter,'lb',lb,'ub',ub,...
+            'options',fminconOpts);
+        gs = GlobalSearch('Display','off');
+        [parameterArray(:,1),fvalArray(:,1)] = run(gs,problem);
+        if nRecord > 1
+            for iRecord = 2:nRecord
+                [parameterArray(:,iRecord),fvalArray(:,iRecord)] =...
+                    fmincon(@(parameter) objectiveFunction(parameter,iRecord),...
+                    parameterArray(:,iRecord-1),[],[],[],[],lb,ub,[],fminconOpts);
+            end
+        end
+end
+% get uncertainty
+if nargout == 3
+    switch obj.objectiveMethod
+        case 'debiasedWhittle'
+            varParameterArray = nan(length(obj.parameter),length(obj.parameter),nRecord);
+            for iRecord = 1:nRecord
+                expHess = WhittleExpHess(obj,size(timeseries,1),Delta,fitIndex,...
+                    parameterArray(:,iRecord));
+                covLikelihood = covDebiasedWhittle(obj,size(timeseries,1),Delta,fitIndex,...
+                    parameterArray(:,iRecord));
+                varParameterArray(:,:,iRecord) = (expHess\covLikelihood)/expHess;
+            end
+        otherwise
+            varParameterArray = [];
+            warning(['Variance not implemented for this objective function, '...
+                'returning empty array.'])
+    end
+end
+
+end
+
+%% helper functions
+function varargout = objectiveBound(lb,ub,objectiveFunction,parameter)
+% function to put bounds on the parameter space, to be used by fminsearch
+if any(parameter < lb) || any(parameter > ub)
+    varargout = mat2cell(Inf(nargout,1),ones(nargout,1));
+else
+    [varargout{1:nargout}] = objectiveFunction(parameter);
+end
+end
+
+function sqhess = fullHess(hess,p)
+% function to convert to full square Hessian matrix
+sqhess = zeros(p);
+sqhess(tril(true(p))) = hess;
+sqhess = sqhess + sqhess' - diag(diag(sqhess));
+end
+
+function fmix = crossMultiplyDerivative(deriv)
+% function to cross multiply first derivative for use with upper triangular
+% hessian
+p = size(deriv,2);
+f1 = repelem(deriv,1,p:-1:1);
+f2 = repmat(deriv,1,p);
+f2 = f2(:,reshape(tril(true(p)),p^2,1));
+fmix = f1.*f2;
+end
+%% spectral estimates
+
+function S = computeI(timeseries,Delta,fitIndex)
+% function to calculate bartlett periodogram and corresponding omega
+% S
+S = Delta/(size(timeseries,1)*2*pi)*abs(fft(timeseries,[],1)).^2;
+S = S(fitIndex,:);
+end
+
+function S = computeBartI(timeseries,Delta,fitIndex,windowSize)
+% function to calculate bartlett periodogram and corresponding omega
+% S
+nSegments = floor(length(timeseries)/windowSize);
+segmentPeriodograms = nan(windowSize,size(timeseries,2),nSegments);
+for iSeg = 1:nSegments
+    segmentPeriodograms(:,:,iSeg) = Delta/(windowSize*2*pi)*...
+        abs(fft(timeseries((iSeg-1)*windowSize+1:iSeg*windowSize,:),[],1)).^2;
+end
+S = mean(segmentPeriodograms,3);
+S = S(fitIndex,:);
+
+end
+
+function omega = computeOmega(N,Delta,index)
+% function to compute omega
+omega = 2*pi/Delta*(0:1/N:1/2);
+omega = omega(index)';
+end
+%% objective functions
+
+function [fval,deriv,hess] = LS(obj,S,omega,Delta,parameter)
+% subfunction to calculate least squares objective
+[density{1:nargout}] = parSpectralDensity(obj,omega,Delta,parameter); % get density and derivatives
+diffS = density{1}-S; % calculate difference for use later
+fval = sum(diffS.^2); % calculate least squares value
+if nargout > 1
+    deriv = 2*sum(density{2}.*diffS,1); % calculate derivative if required
+end
+if nargout > 2
+    fmix = crossMultiplyDerivative(density{2});
+    d2part = zeros(1,size(fmix,2));
+    d2part(:,reshape(obj.hessIndex,[],1)) = sum(density{3}.*diffS,1);
+    hess = fullHess(2*(d2part(:,reshape(tril(true(size(density{2},2))),[],1))+sum(fmix,1)),...
+        size(density{2},2)); % calculate hessian if required
+end
+end
+
+function [fval,deriv,hess] = generalWhittle(obj,density,S)
+% subfunction to calculate whittle likelihood that takes a density argument
+% so can be used by specific versions of the whittle likelihood
+fval = sum(log(density{1}))+sum(S./density{1});
+if nargout > 1
+    deriv = sum(density{2}.*(1./density{1}-S./density{1}.^2),1);
+end
+if nargout > 2
+    fmix = crossMultiplyDerivative(density{2});
+    d2part = zeros(1,size(fmix,2));
+    d2part(:,obj.d2IndexCon) = sum(density{3}.*(1./density{1}-S./density{1}.^2),1);
+    hess = fullHess(d2part(:,obj.d2IndexUse)+...
+        sum(fmix.*(-1./density{1}.^2+2*S./density{1}.^3),1),size(density{2},2));
+end
+end
+
+function varargout = Whittle(obj,S,omega,Delta,parameter)
+% subfunction to compute standard Whittle likelihood
+[density{1:nargout}] = parSpectralDensity(obj,omega,Delta,parameter);
+[varargout{1:nargout}] = generalWhittle(obj,density,S);
+end
+
+function varargout = aliasedWhittle(obj,S,omega,Delta,parameter)
+% subfunction to compute aliased Whittle likelihood
+[density{1:nargout}] = parAliasedSpectralDensity(obj,omega,Delta,parameter);
+[varargout{1:nargout}] = generalWhittle(obj,density,S);
+end
+
+function varargout = debiasedWhittle(obj,S,N,Delta,index,parameter)
+% subfunction to compute debiased Whittle likelihood
+[density{1:nargout}] = parExpectedPeriodogram(obj,N,Delta,parameter,index);
+[varargout{1:nargout}] = generalWhittle(obj,density,S);
+end
+
+function varargout = maximumLikelihood(obj,timeseries,Delta,parameter)
+% subfunction to calculate maximum likelihood for Gaussian process
+[autoCov{1:nargout}] = parAutoCovariance(obj,length(timeseries),Delta,parameter);
+cholSigma = chol(toeplitz(autoCov{1}));
+invSigma = inv(cholSigma)/cholSigma';
+varargout{1} = 0.5*(2*sum(log(diag(cholSigma))) + (timeseries)'*invSigma*(timeseries));
+if nargout == 2
+    deriv = nan(1,size(autoCov{2},2));
+    for iPar = 1:size(autoCov{2},2)
+        dSigma = toeplitz(autoCov{2}(:,iPar));
+        a = invSigma*timeseries;
+        deriv(1,iPar) = 0.5*trace((a*a'-invSigma)*dSigma);
+    end
+    varargout{2} = deriv;
+end
+
+end
+
+%% expected hessians
+
+function expHess = WhittleExpHess(obj,N,Delta,index,parameter)
+% subfunction to calculate the expected hessian of the debiased Whittle
+% likelhood
+[density,derivative] = parExpectedPeriodogram(obj,N,Delta,parameter,index);
+fmix = crossMultiplyDerivative(derivative);
+expHess = fullHess(sum(fmix./(density).^2,1),size(derivative,2));
+end
+
+%% covariance of the debiased Whittle likelihood
+function covLikelihood = covDebiasedWhittle(obj,N,Delta,index,parameter)
+% function to calculate the covariance of the debiased Whittle likelihood
+[EI,dEI] = parExpectedPeriodogram(obj,N,Delta,parameter,index);
+a = -dEI./(EI.^2); % pxN
+a = [a;a(end:-1:1,:)]; % add for 2 sided version
+p = length(parameter);
+covI = parCovPeriodogram(obj,N,Delta,parameter);
+index = [index;index(end:-1:1)]; % add for 2 sided version
+covIused = covI(index,index);
+covLikelihood = nan(p,p);
+for r = 1:p
+    for s = r:p
+        covLikelihood(r,s) = a(:,r)'*covIused*a(:,s);
+        if r~=s
+            covLikelihood(s,r) = covLikelihood(r,s);
+        end
+    end
+end
+end
+##### SOURCE END #####
+--></body></html>
