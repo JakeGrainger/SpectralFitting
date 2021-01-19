@@ -23,10 +23,14 @@ filts2=dpss(N-1,4)'; hh2=filts2(1,:)';
 E = abs(fft(diff(seriesStore,1,1) ,[], 1)).^2/N/2/pi*Delta; E = E';
 F = abs(fft(diff(seriesStore,1,1).*hh2 ,[], 1)).^2/2/pi*Delta; F = F';
 P = spectralFitting.Periodogram(seriesStore(:,1), Delta);
-subplot(2,2,1); imagesc(P.omega,P.omega,corr(C(:, 1:end/2))); title("Periodogram")
-subplot(2,2,2); imagesc(P.omega,P.omega,corr(D(:, 1:end/2))); title("Tapered Periodogram")
-subplot(2,2,3); imagesc(P.omega,P.omega,corr(E(:, 1:floor(end/2)))); title("Periodogram Differenced")
-subplot(2,2,4); imagesc(P.omega,P.omega,corr(F(:, 1:floor(end/2)))); title("Tapered Periodogram Differenced")
+fig = figure();clf;
+subplot(1,4,1); imagesc(P.omega,P.omega,corr(C(:, 1:end/2))); title("Periodogram")
+subplot(1,4,2); imagesc(P.omega,P.omega,corr(D(:, 1:end/2))); title("Tapered Periodogram")
+subplot(1,4,3); imagesc(P.omega,P.omega,corr(E(:, 1:floor(end/2)))); title("Periodogram Differenced")
+subplot(1,4,4); imagesc(P.omega,P.omega,corr(F(:, 1:floor(end/2)))); title("Tapered Periodogram Differenced")
+fig.Units               = 'centimeters';
+fig.Position(3)         = 25;
+fig.Position(4)         = 5;
 print -dpng -r600 tapering_correlation_periodogram
 %%
 fitIndex = 2*pi/Delta/N*(1:N/2+1)' > 0.4;
