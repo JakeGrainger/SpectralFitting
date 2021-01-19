@@ -64,16 +64,16 @@ for jRep = 1:nReps
     B = spectralFitting.BartlettPeriodogram(seriesStore(:, jRep), Delta, waveSpecModel.bartlettWindowSize);
     iniParameter = altInitWaveModel(seriesStore(:,jRep),Delta);
     
-    obj = @(theta) logLS(waveSpecModel, P.I(fitIndex), P.omega(fitIndex), theta, Delta);
+    obj = @(theta) llsBoundsCheck(theta)*logLS(waveSpecModel, P.I(fitIndex), P.omega(fitIndex), theta, Delta);
     fittedValues(:,jRep,3) = fminsearch(obj, iniParameter, waveSpecModel.fminsearchOpts);
     
-    obj = @(theta) logLS(waveSpecModel, B.I(fitIndexBart), B.omega(fitIndexBart), theta, Delta);
+    obj = @(theta) llsBoundsCheck(theta)*logLS(waveSpecModel, B.I(fitIndexBart), B.omega(fitIndexBart), theta, Delta);
     fittedValues(:,jRep,4) = fminsearch(obj, iniParameter, waveSpecModel.fminsearchOpts);
     
-    obj = @(theta) aliasedLogLS(waveSpecModel, P.I(fitIndex), P.omega(fitIndex), theta, Delta);
+    obj = @(theta) llsBoundsCheck(theta)*aliasedLogLS(waveSpecModel, P.I(fitIndex), P.omega(fitIndex), theta, Delta);
     fittedValues(:,jRep,5) = fminsearch(obj, iniParameter, waveSpecModel.fminsearchOpts);
     
-    obj = @(theta) aliasedLogLS(waveSpecModel, B.I(fitIndexBart), B.omega(fitIndexBart), theta, Delta);
+    obj = @(theta) llsBoundsCheck(theta)*aliasedLogLS(waveSpecModel, B.I(fitIndexBart), B.omega(fitIndexBart), theta, Delta);
     fittedValues(:,jRep,6) = fminsearch(obj, iniParameter, waveSpecModel.fminsearchOpts);
     if mod(jRep, 200) == 0
         fprintf("Finised %d of long\n", jRep)
@@ -160,6 +160,14 @@ fig.PaperPositionMode   = 'auto';
 print -dpng -r600 log_LS_box_noLS
 
 %% helper functions
+function out = llsBoundsCheck(theta)
+    if all(theta > [0; 0.4; 1; 1]) && all(theta < [10; pi*1.28; 20; 10])
+        out = 1;
+    else
+        out = Inf;
+    end
+end
+
 function val = logLS(model, I, omega, theta, Delta)
     model.parameter = theta;
     sdf = model.computeSpectralDensity(omega, Delta);
@@ -187,5 +195,5 @@ waveModelAlphaOne = spectralFitting.SpectralModel(@spectralFitting.genJONSWAPsdf
 cov = waveModelAlphaOne.computeAutoCovariance(length(record),Delta);
 alpha = var(record)/cov(1); % i.e. obsVar = modelVar and model variance is alpha times variance when alpha is set to 1.
 %% make vector
-initialParameter = [alpha,omega_p,gamma,r];
+initialParameter = [alpha;omega_p;gamma;r];
 end

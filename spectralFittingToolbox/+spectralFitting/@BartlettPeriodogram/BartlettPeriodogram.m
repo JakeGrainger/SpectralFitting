@@ -1,4 +1,4 @@
-Lclassdef BartlettPeriodogram < spectralFitting.NonParaSpcEst
+classdef BartlettPeriodogram < spectralFitting.NonParaSpcEst
     methods
         function obj = BartlettPeriodogram(timeseries,Delta,windowSize)
             arguments
