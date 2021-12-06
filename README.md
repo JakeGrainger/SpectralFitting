@@ -14,4 +14,3 @@ First ensure that Spectral  Fitting Toolbox is intalled.
 Download the folder spectralFittingPaper and add to the MATLAB path.
 ### Usage
 To run a script, add the relevant subfolder to the path and run as usual.
-## License
