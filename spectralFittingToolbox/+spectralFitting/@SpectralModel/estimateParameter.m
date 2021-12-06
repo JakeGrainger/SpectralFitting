@@ -63,15 +63,15 @@ switch obj.objectiveMethod
         objectiveFunction = @(parameter,record) maximumLikelihood(obj,timeseries(:,record),Delta,parameter);
     case  'taperedDW'
         N = size(timeseries,1);
-        filts=dpss(N,obj.taperBandWidth)'; hh1=filts(1,:)'; % dpss taper of bandwith 4
-        HHK=zeros(N,1); % precomputation of h_t h_{t+\tau},described on page 16
+        filts=dpss(N,obj.taperBandWidth)'; hh1=filts(1,:)'; % dpss taper of bandwith obj.taperBandWidth
+        HHK=zeros(N,1); % allocate for precomputed taper product for expected tapered periodogram
         for mm=0:N-1
-            HHK(mm+1)=sum(hh1(1:N-mm).*hh1(1+mm:N));
+            HHK(mm+1)=sum(hh1(1:N-mm).*hh1(1+mm:N)); % sum for expected tapered periodogram 
         end
-        S = computeI(timeseries.*hh1*sqrt(size(timeseries,1)),Delta,fitIndex);
+        S = computeI(timeseries.*hh1*sqrt(size(timeseries,1)),Delta,fitIndex); % compute the tapered periodogram
         objectiveFunction = @(parameter,record) taperedDW(obj,S(:,record),size(timeseries,1),Delta,fitIndex,parameter,HHK);
     otherwise
-        % construct I
+        % construct I and omega
         omega = computeOmega(size(timeseries,1),Delta,fitIndex);
         S = computeI(timeseries,Delta,fitIndex);
         switch obj.objectiveMethod
@@ -91,8 +91,8 @@ switch obj.objectiveMethod
 end
 %% perform fitting
 nRecord = size(timeseries,2);
-parameterArray = nan(length(obj.parameter),nRecord);
-fvalArray = nan(1,nRecord);
+parameterArray = nan(length(obj.parameter),nRecord); % preallocate array for parameter estimates 
+fvalArray = nan(1,nRecord); % preallocate array for objective function values
 switch obj.fitRoutine
     case 'fminsearch'
         for iRecord = 1:nRecord
